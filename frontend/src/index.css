@@ -6,26 +6,94 @@
   --color-gold: #D4AF37;
   --color-cream: #F5F0E6;
   --color-amber: #C9962E;
+  --color-silk: #FBF7EF;
+  --color-champagne: #E7D5A3;
+  --color-ink: #0D0A08;
+  --color-border: #E7D8BE;
+  --color-code-bg: #FFFDF8;
   --font-heading: "Playfair Display", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  min-width: 320px;
+  background: #FBF7EF;
+  color: #1a1410;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbar for a luxurious feel */
+.dark body {
+  background: #0D0A08;
+  color: #F5F0E6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: #1a1410;
+}
+
+@layer components {
+  .luxury-page {
+    @apply bg-silk text-primary transition-colors duration-300 dark:bg-ink dark:text-cream;
+  }
+
+  .luxury-section {
+    @apply px-6 py-20 md:py-28;
+  }
+
+  .luxury-shell {
+    @apply mx-auto max-w-7xl;
+  }
+
+  .luxury-eyebrow {
+    @apply mb-4 block text-xs font-bold uppercase tracking-[0.28em] text-gold;
+  }
+
+  .luxury-heading {
+    @apply font-heading font-bold leading-tight text-primary dark:text-cream;
+  }
+
+  .luxury-copy {
+    @apply leading-relaxed text-primary/70 dark:text-cream/70;
+  }
+
+  .luxury-surface {
+    @apply border border-border/80 bg-white/80 shadow-[0_18px_55px_rgba(26,20,16,0.08)] backdrop-blur transition-colors duration-300 dark:border-white/10 dark:bg-[#17110E]/90 dark:shadow-[0_18px_55px_rgba(0,0,0,0.28)];
+  }
+
+  .luxury-button {
+    @apply inline-flex items-center justify-center gap-2 border border-gold bg-gold px-8 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary shadow-[0_16px_35px_rgba(212,175,55,0.2)] transition duration-300 hover:-translate-y-0.5 hover:bg-primary hover:text-gold dark:hover:bg-cream dark:hover:text-primary;
+  }
+
+  .luxury-button-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-primary/25 bg-transparent px-8 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary transition duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-primary dark:border-white/30 dark:text-cream dark:hover:border-gold;
+  }
+
+  .luxury-input {
+    @apply w-full border border-border bg-white/80 px-4 py-3 text-primary outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20 dark:border-white/10 dark:bg-[#120D0A] dark:text-cream;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #1F1410;
+  background: #1a1410;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #D4A359;
-  border-radius: 4px;
+  background: #D4AF37;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #E6B76C;
+  background: #E7D5A3;
 }
