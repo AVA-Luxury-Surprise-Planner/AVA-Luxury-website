@@ -1,9 +1,14 @@
+const mongoose = require('mongoose');
 const Booking = require('../models/Booking');
 const Category = require('../models/Category');
 
 const getAllBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find()
+    const filter = {};
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    const bookings = await Booking.find(filter)
       .populate('eventCategory', 'name slug')
       .sort({ createdAt: -1 });
     res.json(bookings);
@@ -27,22 +32,39 @@ const getBookingById = async (req, res) => {
 
 const createBooking = async (req, res) => {
   try {
-    const { name, phone, email, eventCategory, eventDate, guests, budget, location, notes } = req.body;
+    const { fullName, phone, email, eventCategory, eventDate, guestCount, budgetRange, venue, notes } = req.body;
+
+    const errors = [];
+    if (!fullName) errors.push('Full name is required');
+    if (!phone) errors.push('Phone is required');
+    if (!email) errors.push('Email is required');
+    else if (!/^\S+@\S+\.\S+$/.test(email)) errors.push('Valid email is required');
+    if (!eventCategory) errors.push('Event category is required');
+    else if (!mongoose.isValidObjectId(eventCategory)) errors.push('Invalid event category');
+    if (!eventDate) errors.push('Event date is required');
+    else if (new Date(eventDate) <= new Date()) errors.push('Event date must be in the future');
+    if (guestCount !== undefined && guestCount !== null && guestCount !== '' && Number(guestCount) <= 0) {
+      errors.push('Guest count must be a positive number');
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({ message: 'Validation failed', errors });
+    }
 
     const category = await Category.findById(eventCategory);
     if (!category) {
-      return res.status(400).json({ message: 'Invalid category' });
+      return res.status(400).json({ message: 'Validation failed', errors: ['Event category not found. Please select a valid option.'] });
     }
 
     const booking = new Booking({
-      name,
+      fullName,
       phone,
       email,
       eventCategory,
       eventDate,
-      guests,
-      budget,
-      location,
+      guestCount,
+      budgetRange,
+      venue,
       notes,
       status: 'pending'
     });
@@ -54,13 +76,17 @@ const createBooking = async (req, res) => {
   }
 };
 
-const updateBooking = async (req, res) => {
+const updateBookingStatus = async (req, res) => {
   try {
-    const { name, phone, email, eventCategory, eventDate, guests, budget, location, notes, status } = req.body;
+    const { status } = req.body;
     
+    if (!['pending', 'confirmed', 'rejected', 'completed'].includes(status)) {
+       return res.status(400).json({ message: 'Invalid status' });
+    }
+
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { name, phone, email, eventCategory, eventDate, guests, budget, location, notes, status },
+      { status },
       { new: true, runValidators: true }
     );
 
@@ -90,6 +116,6 @@ module.exports = {
   getAllBookings,
   getBookingById,
   createBooking,
-  updateBooking,
+  updateBookingStatus,
   deleteBooking
 };

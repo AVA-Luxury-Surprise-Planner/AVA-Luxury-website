@@ -3,14 +3,22 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 const services = [
-  { to: '/categories/proposal', number: '01', title: 'Proposal', detail: 'Private reveals, floral scenes, rooftops, musicians', accent: 'from-rose-950 via-stone-900 to-primary', size: 'md:row-span-2 md:h-[520px]' },
-  { to: '/categories/birthday', number: '02', title: 'Birthday', detail: 'Milestone parties with cake, styling, and surprise entries', accent: 'from-amber-950 via-stone-900 to-primary', size: 'md:h-[252px]' },
-  { to: '/categories/anniversary', number: '03', title: 'Anniversary', detail: 'Candlelit dinners, vow renewals, and intimate rooms', accent: 'from-stone-800 via-stone-900 to-primary', size: 'md:h-[252px]' },
-  { to: '/categories/romantic', number: '04', title: 'Romantic Dinner', detail: 'Tables for two, petals, private chefs, soft light', accent: 'from-red-950 via-stone-900 to-primary', size: 'md:h-[252px]' },
-  { to: '/categories/babyshower', number: '05', title: 'Baby Shower', detail: 'Warm pastel styling, dessert tables, and family moments', accent: 'from-sky-950 via-stone-900 to-primary', size: 'md:h-[224px]' },
-  { to: '/categories/corporate', number: '06', title: 'Corporate', detail: 'Refined launches, dinners, awards, and brand moments', accent: 'from-zinc-800 via-stone-900 to-primary', size: 'md:h-[224px]' },
-  { to: '/categories/diaspora', number: '07', title: 'Diaspora', detail: 'Homecomings, holiday welcomes, and long-distance surprises', accent: 'from-emerald-950 via-stone-900 to-primary', size: 'md:h-[224px]' },
-  { to: '/categories/custom', number: '08', title: 'Custom', detail: 'One-of-one concepts shaped around your story', accent: 'from-violet-950 via-stone-900 to-primary', size: 'md:h-[224px]' },
+  { to: '/categories/proposal', number: '01', title: 'Proposal', detail: 'Private reveals, floral scenes, rooftops, musicians', accent: 'from-rose-950 via-stone-900 to-primary', backgroundImage: '/proposaltemp.jpg', size: 'md:row-span-2 md:h-[520px]' },
+  {
+    to: '/categories/birthday',
+    number: '02',
+    title: 'Birthday',
+    detail: 'Milestone parties with cake, styling, and surprise entries',
+    accent: 'from-amber-950 via-stone-900 to-primary',
+    backgroundImage: '/birthdaytemp.jpg',
+    size: 'md:h-[252px]',
+  },
+  { to: '/categories/anniversary', number: '03', title: 'Anniversary', detail: 'Candlelit dinners, vow renewals, and intimate rooms', accent: 'from-stone-800 via-stone-900 to-primary', backgroundImage: '/anniversarytemp.jpg', size: 'md:h-[252px]' },
+  { to: '/categories/romantic', number: '04', title: 'Romantic Dinner', detail: 'Tables for two, petals, private chefs, soft light', accent: 'from-red-950 via-stone-900 to-primary', backgroundImage: '/romantictemp.jpg', size: 'md:h-[252px]' },
+  { to: '/categories/babyshower', number: '05', title: 'Baby Shower', detail: 'Warm pastel styling, dessert tables, and family moments', accent: 'from-sky-950 via-stone-900 to-primary', backgroundImage: '/babytemp.jpg', size: 'md:h-[224px]' },
+  { to: '/categories/corporate', number: '06', title: 'Wedding Reception', detail: 'Elegant ceremony details and reception glamour', accent: 'from-zinc-800 via-stone-900 to-primary', backgroundImage: '/graduationtemp.jpg', size: 'md:h-[224px]' },
+  { to: '/categories/diaspora', number: '07', title: 'Graduation Celebration', detail: 'Caps, family dinners, and proud milestone moments', accent: 'from-emerald-950 via-stone-900 to-primary', backgroundImage: '/mothertemp.jpg', size: 'md:h-[224px]' },
+  { to: '/categories/custom', number: '08', title: 'Bridal Shower', detail: 'Chic showers, personal favors, and intimate gatherings', accent: 'from-violet-950 via-stone-900 to-primary', backgroundImage: '/bridaltemp.jpg', size: 'md:h-[224px]' },
 ];
 
 const standards = [
@@ -109,8 +117,10 @@ const Home = () => {
               <Link
                 key={service.to}
                 to={service.to}
-                className={`group relative min-h-60 overflow-hidden bg-gradient-to-br ${service.accent} ${index === 0 ? 'md:col-span-2' : ''} ${service.size}`}
+                className={`group relative min-h-60 overflow-hidden ${service.backgroundImage ? 'bg-cover bg-center' : `bg-gradient-to-br ${service.accent}`} ${service.size}`}
+                style={service.backgroundImage ? { backgroundImage: `url('${service.backgroundImage}')` } : undefined}
               >
+                <div className="absolute inset-0 bg-black/55" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-white/5" />
                 <div className="absolute inset-0 border border-white/10 transition group-hover:border-gold/70" />
                 <div className="absolute left-0 top-0 h-full w-1 bg-gold/70 opacity-0 transition group-hover:opacity-100" />
@@ -118,6 +128,18 @@ const Home = () => {
                   <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-gold">{service.number}</p>
                   <h3 className="mb-3 font-heading text-3xl font-bold leading-tight text-white md:text-4xl">{service.title}</h3>
                   <p className="max-w-sm text-sm leading-relaxed text-cream/70">{service.detail}</p>
+                  {service.thumbnails && (
+                    <div className="mt-4 grid grid-cols-4 gap-2">
+                      {service.thumbnails.map((thumb) => (
+                        <img
+                          key={thumb}
+                          src={thumb}
+                          alt={`${service.title} thumb`}
+                          className="h-16 w-full rounded-xl object-cover opacity-90 shadow-inner transition duration-300 hover:opacity-100"
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </Link>
             ))}

@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   const updateBookingStatus = async (bookingId, status) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/bookings/${bookingId}`, 
+      await axios.patch(`http://localhost:5000/api/bookings/${bookingId}/status`, 
         { status }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -143,6 +143,7 @@ const AdminDashboard = () => {
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Bookings</p>
                 <p className="text-3xl font-bold text-primary dark:text-white">{bookings.length}</p>
+                <p className="mt-1 text-xs text-yellow-600">{bookings.filter(b => b.status === 'pending').length} pending</p>
               </div>
               <Calendar className="text-gold" size={24} />
             </div>
@@ -215,20 +216,33 @@ const AdminDashboard = () => {
                   <thead>
                     <tr className="border-b border-gray-200 dark:border-gray-700">
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Name</th>
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Contact</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Event</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Date</th>
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Guests</th>
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Budget</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Status</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {bookings.map((booking) => (
-                      <tr key={booking._id} className="border-b border-gray-100 dark:border-gray-800">
-                        <td className="py-3 px-4 text-sm text-gray-900 dark:text-white">{booking.name}</td>
+                    {bookings.length === 0 ? (
+                      <tr><td colSpan={8} className="py-10 text-center text-sm text-gray-400">No bookings yet.</td></tr>
+                    ) : bookings.map((booking) => (
+                      <tr key={booking._id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                        <td className="py-3 px-4">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">{booking.fullName}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{booking.phone}</p>
+                        </td>
+                        <td className="py-3 px-4">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{booking.email}</p>
+                        </td>
                         <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{booking.eventCategory?.name || 'N/A'}</td>
                         <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
                           {new Date(booking.eventDate).toLocaleDateString()}
                         </td>
+                        <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{booking.guestCount ?? '—'}</td>
+                        <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{booking.budgetRange || '—'}</td>
                         <td className="py-3 px-4">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
                             {booking.status}
@@ -260,7 +274,7 @@ const AdminDashboard = () => {
                                 className="text-blue-600 hover:text-blue-700"
                                 title="Mark Complete"
                               >
-                                <Check size={16} />
+                                <Clock size={16} />
                               </button>
                             )}
                             <button
