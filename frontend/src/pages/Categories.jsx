@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye } from 'lucide-react';
 import axios from 'axios';
+import { apiEndpoints } from '../config/api';
 
 const categories = [
   {
@@ -142,7 +143,7 @@ const Categories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/categories');
+        const response = await axios.get(apiEndpoints.categories.getAll);
         setApiCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);

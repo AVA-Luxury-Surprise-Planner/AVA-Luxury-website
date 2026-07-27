@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { apiEndpoints } from '../config/api';
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -41,10 +42,10 @@ const AdminDashboard = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [bookingsRes, categoriesRes, blogsRes, contactRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/bookings', { headers }),
-        axios.get('http://localhost:5000/api/categories'),
-        axios.get('http://localhost:5000/api/blogs'),
-        axios.get('http://localhost:5000/api/contact', { headers })
+        axios.get(apiEndpoints.bookings.getAll, { headers }),
+        axios.get(apiEndpoints.categories.getAll),
+        axios.get(apiEndpoints.blogs.getAll),
+        axios.get(apiEndpoints.contact.getAll, { headers })
       ]);
 
       setBookings(bookingsRes.data);
@@ -67,7 +68,7 @@ const AdminDashboard = () => {
   const updateBookingStatus = async (bookingId, status) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`http://localhost:5000/api/bookings/${bookingId}/status`, 
+      await axios.put(apiEndpoints.bookings.update(bookingId), 
         { status }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -82,11 +83,12 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const endpoint = type === 'booking' ? 'bookings' : 
-                       type === 'category' ? 'categories' : 
-                       type === 'blog' ? 'blogs' : 'contact';
+      const endpoint = type === 'booking' ? apiEndpoints.bookings.delete(id) : 
+                       type === 'category' ? apiEndpoints.categories.delete(id) : 
+                       type === 'blog' ? apiEndpoints.blogs.delete(id) : 
+                       apiEndpoints.contact.delete(id);
       
-      await axios.delete(`http://localhost:5000/api/${endpoint}/${id}`, 
+      await axios.delete(endpoint, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchData();

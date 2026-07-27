@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Send, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
+import { apiEndpoints } from '../config/api';
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
@@ -26,7 +27,7 @@ const Booking = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/categories');
+        const { data } = await axios.get(apiEndpoints.categories.getAll);
         setCategories(data);
         
         const eventTypeParam = searchParams.get('eventType');
@@ -88,7 +89,7 @@ const Booking = () => {
     setServerErrors([]);
 
     try {
-      await axios.post('http://localhost:5000/api/bookings', {
+      await axios.post(apiEndpoints.bookings.create, {
         fullName: formData.fullName,
         phone: formData.phone,
         email: formData.email,
