@@ -7,7 +7,10 @@ const path = require('path');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://ava-luxury-website-hima.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve static files from uploads directory

@@ -33,15 +33,16 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 ${isSolid ? 'border-b border-border/70 bg-white/90 py-3 shadow-[0_10px_30px_rgba(26,20,16,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-ink/90' : 'bg-transparent py-5'}`}>
+      <nav className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 ${isSolid ? 'border-b border-border/70 bg-white/90 py-2 shadow-[0_10px_30px_rgba(26,20,16,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-ink/90' : 'bg-transparent py-4'}`}>
         <div className="luxury-shell flex items-center justify-between px-6">
-          <Link to="/" className="relative z-40 font-heading text-2xl font-bold tracking-wide text-gold">
-            Ava Luxury
+          <Link to="/" className="relative z-40 flex items-center gap-3">
+            <img src="/AVAlogo.png" alt="Ava Luxury Logo" className="h-10 w-auto" />
+            {/* <span className="font-heading text-2xl font-bold tracking-wide text-gold">Ava Luxury</span> */}
           </Link>
 
-          <div className="relative z-40 hidden items-center gap-7 md:flex">
+          <div className="relative z-40 hidden items-center gap-8 md:flex">
             {navItems.map((item) => (
-              <Link key={item.to} to={item.to} className={`${linkClass} text-sm font-semibold uppercase tracking-[0.16em] transition`}>
+              <Link key={item.to} to={item.to} className={`${linkClass} text-base font-medium tracking-wide transition`}>
                 {item.label}
               </Link>
             ))}
