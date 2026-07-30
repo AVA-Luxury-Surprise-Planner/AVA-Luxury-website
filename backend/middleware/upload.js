@@ -2,8 +2,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Use /tmp directory for Render compatibility
+const uploadDir = process.env.RENDER ? '/tmp/uploads' : path.join(__dirname, '../uploads');
+
 // Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
